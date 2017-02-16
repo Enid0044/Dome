@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<style>
+        body,p,h1,h2,h3,h4,h5,h6,input{
+            padding:0;
+            margin:0;
+        }
+        body{
+            background:url("img/bg2.jpg");
+            color:#000;
+        }
+        ul{
+            padding:0;
+            margin:0;
+            list-style: none;
+        }
+        input{
+            outline: none;
+        }
+        a{
+            text-decoration: none;
+            color:#5c5959;
+        }
+        #mWrap{
+            width:1008px;
+            height:688px;
+            margin:100px auto;
+
+        }
+        #mheader{
+            height:58px;
+            background:rgba(42,29,82,.8);
+        }
+        .mheader_content{
+            width:967px;
+            margin:0 auto;
+        }
+        .mheader_content li{
+            float:left;
+            width:33.3%;
+            height:100%;
+            position:relative;
+        }
+        .mheader_content li h1{
+            float:left;
+            color:#fff;
+            font:bold 20px/58px "宋体";
+        }
+        .mheader_content li .text{
+            float:left;
+            width:220px;
+            height:20px;
+            border-radius: 13px;
+            border: none;
+            padding: 5px 10px;
+            font:12px/20px "宋体";
+            margin-top:14px;
+        }
+        .mheader_content li a{
+            position: absolute;
+            right:0;
+            top:19px;
+            width:20px;
+            height:20px;
+            color:#fff;
+            font:20px/20px "Arial";
+        }
+        #mSection{
+           height:562px;
+           overflow: hidden;
+        }
+
+        .mConten_left{
+            float:left;
+            width:199px;
+            height:562px;
+            border-right:1px solid #ccc;
+            background:rgba(255,255,255,.7);
+        }
+        .mConten_left h2{
+            width:200px;
+            font:bold 20px/40px "宋体";
+            color:#4c4b4b;
+            text-align: center;
+            height:40px;
+
+        }
+        .mConten_left li{
+            width:200px;
+            height:30px;
+            text-indent: 20px;
+
+        }
+        .mConten_left li a{
+            font:14px/30px "宋体";
+        }
+        .mConten .hover{
+            background:rgba(42,29,82,.6);
+        }
+        .mConten_right{
+            float:left;
+            width:807px;
+            height:562px;
+            background:rgba(255,255,255,.9);
+        }
+
+        .mConten_right #mCanvas{
+            display: block;
+            margin:31px auto;
+        }
+        #mFooter{
+            height:68px;
+            background:rgba(147,149,152,.5);
+        }
+        #mFooter div{
+            float:left;
+        }
+        #prev,#next{
+            margin-top:25px;
+            float:left;
+            width:25px;
+            height:25px;
+            background:url(img/play.png) no-repeat ;
+        }
+        #mFooter #prev{
+            background-position: -70px 0;
+        }
+        #mFooter #next{
+            background-position: -95px 0;
+        }
+        #play{
+            margin-top: 20px;
+            float:left;
+            width:32px;
+            height:33px;
+            background:url(img/play.png) no-repeat -35px 0;
+        }
+        #mFooter .active{
+            background:url(img/play.png) no-repeat ;
+        }
+        #ctro_play,#ctro_progress,#volume{
+            float:left;
+        }
+        #ctro_play li{
+            float:left;
+            margin:0 8px;
+        }
+        #ctro_play{
+            width:200px;
+            padding-left:25px;
+        }
+        #ctro_progress .time{
+            width:90px;
+            text-align: center;
+            font:12px/68px "宋体";
+            color:#fff;
+        }
+        #ctro_progress .progressBar{
+            width:400px;
+            height:3px;
+            background:#67686a;
+            margin-top: 33px;
+            position:relative;
+        }
+        .progressBar .Completed{
+            width:0;
+            height:3px;
+            background:#e86f02;
+        }
+        .progressBar .processBtn{
+            position:absolute;
+            top:-3px;
+            left:0;
+            width:9px;
+            height:9px;
+            background:#e86f02;
+            border-radius: 50%;
+        }
+        #volume{
+            margin:24px 0 0 30px;
+        }
+        #volume span{
+            float:left;
+            width:20px;
+            height:20px;
+            background:url(img/play.png) no-repeat 0 -35px;
+        }
+        #volume .Vicon{
+        	background:url(img/play.png) no-repeat -20px -35px;
+        }
+        #volume .Completed,#volume  .progressBar{
+            height:3px;
+            
+        }
+        #volume .progressBar{
+        	margin-top:8.5px;
+            width:150px;
+            background:#67686a;
+            margin-left:10px;
+            position:relative;
+        }
+        #volume .Completed{
+            width:0;
+            background:#e86f02;
+        }
+        #volume .processBtn{
+            position:absolute;
+            top:-3px;
+            left:0;
+            width:9px;
+            height:9px;
+            background:#e86f02;
+            border-radius: 50%;
+        }
+    </style>
+<body>
+	<section id="mWrap">
+	    <header id="mheader">
+	        <ul class="mheader_content">
+	            <li >
+	                <h1>我的音乐</h1>
+	            </li>
+	            <li>
+	                <input type="text" placeholder="输入搜素歌曲……" class="text">
+	            </li>
+	            <li>
+	                <a href="javascript:;">X</a>
+	            </li>
+	        </ul>
+	    </header>
+	    <section id="mSection">
+	        <div class="mConten_left">
+	            <h2>默认列表</h2>
+	            <ul class="mConten">
+	                <!-- <li class="hover">
+	                    <a href="#">乌兰巴托的夜</a>
+	                </li>
+	                <li>
+	                    <a href="#">See You Again</a>
+	                </li>
+	                <li>
+	                    <a href="#">小幸运</a>
+	                </li> -->
+	            </ul>
+	        </div>
+	        <div class="mConten_right">
+	            <canvas id="mCanvas" width="750" height="500"></canvas>
+	            <audio id="audio"   controls="controls" preload="auto"  >
+	        </div>
+	    </section>
+	    <footer id="mFooter">
+	        <ul id="ctro_play">
+	            <li id="prveSong">
+	                <a href="#" id="prev"></a>
+	            </li>
+	            <li id="playSong">
+	                <a href="#" id="play"></a>
+	            </li>
+	            <li id="nextSong">
+	                <a href="#" id="next"></a>
+	            </li>
+	        </ul>
+	        <div id="ctro_progress">
+	            <div class="time">
+	                <span class="total_time">00:00</span>/<span class="duration">00:00</span>
+	            </div>
+	            <div class="progressBar">
+	                <p class="Completed"></p>
+	                <a href="#" class="processBtn"></a>
+	            </div>
+	        </div>
+	        <div id="volume">
+	            <span ></span>
+	            <div class="progressBar">
+	                <p class="Completed"></p>
+	                <a href="#" class="processBtn"></a>
+	            </div>
+	        </div>
+	    </footer>
+	</section>
+</body>
+<script>
+window.AudioContext=window.AudioContext||window.webkitAudioContext||window.mozAudioContext;   //兼容
+
+var msc=['See You Again','小幸运','乌兰巴托的夜','朋友','红日','解放'];
+var mscsrc=['mp3/刘雪婧 - See You Again.mp3','mp3/小幸运- 田馥甄.mp3','mp3/蒋敦豪 - 乌兰巴托的夜.mp3','mp3/friend.mp3','mp3/红日.mp3','mp3/解放.mp3'];
+
+var audio=document.getElementById("audio");
+var mConten=document.getElementsByClassName("mConten")[0];
+var playStart=document.getElementById("play");
+var inner="";
+var m=0;  //记录当前是第几首歌曲;
+var prev=document.getElementById("prev");
+var next=document.getElementById("next");
+var lis=mConten.getElementsByTagName("li");
+var ctro_progress=document.getElementById("ctro_progress");
+var total_time=document.getElementsByClassName("total_time")[0];
+var duration=document.getElementsByClassName("duration")[0];
+var Completed=ctro_progress.getElementsByClassName("Completed")[0];
+var processBtn=ctro_progress.getElementsByClassName("processBtn")[0];
+var proBar=ctro_progress.getElementsByClassName("progressBar")[0];
+var volume=document.getElementById("volume");
+var processBtn2=volume.getElementsByClassName("processBtn")[0];
+var Completed2=volume.getElementsByClassName("Completed")[0];
+var progressBar2=volume.getElementsByClassName("progressBar")[0];
+var span=volume.getElementsByTagName("span")[0]
+
+
+prev.addEventListener("click",preva);
+next.addEventListener("click",nexta);
+playStart.addEventListener("click",run);
+audio.addEventListener('timeupdate',progressBar)
+
+for(var i=0; i<lis.length; i++){
+    lis[i].addEventListener("mouseover",over)
+};
+//播放进度条
+function progressBar(){
+    if (!isNaN(audio.duration)) {
+    	 
+total_time.innerHTML=nub(Math.round(audio.duration/60))+":"+nub(Math.round(audio.duration%60));
+
+        duration.innerHTML=nub(Math.round(audio.currentTime/60))+":"+nub(Math.round(audio.currentTime%60));
+        //console.log(duration.innerHTML)
+        Completed.style.width = (audio.currentTime/audio.duration)*400+"px";
+        processBtn.style.left=(audio.currentTime/audio.duration)*400+"px";
+        
+    };
+	
+};
+
+//控制播放进度条
+processBtn.addEventListener("mousedown",Vdown1);
+function Vdown1(ev){
+    ev=ev||event;
+    disX=ev.pageX-processBtn.offsetLeft;
+    document.addEventListener("mousemove",Vmove1)
+    document.addEventListener("mouseup",Vup1);
+    function Vmove1(ev){
+        ev=ev||event;
+        var L=ev.pageX-disX;
+        if(L<0){
+            L=0;
+        }else if(L>=proBar.offsetWidth-processBtn.offsetWidth){
+            L=proBar.offsetWidth-processBtn.offsetWidth;
+        }
+        processBtn.style.left=L+"px";
+        Completed.style.width=L+"px";
+        //audio.currentTime =
+        
+    }
+    function Vup1(){
+    	document.removeEventListener('mousemove',Vmove1);
+		document.removeEventListener('mouseup',Vup1);
+    }
+    ev.preventDefault();
+};
+//  自动播放下一首
+audio.addEventListener("ended",Ended,false)
+function Ended(){
+	nexta();
+}
+
+
+//加0函数
+function nub(nub){
+    return nub<10?"0"+nub:""+nub;
+};
+
+
+//初始音量
+audio.volume=.5;
+processBtn2.style.left="75px";
+Completed2.style.width="75px";
+
+//控制音量的进度条
+processBtn2.addEventListener("mousedown",Vdown);
+function Vdown(ev){
+    ev=ev||event;
+    disX=ev.pageX-processBtn2.offsetLeft;
+    document.addEventListener("mousemove",Vmove)
+    document.addEventListener("mouseup",Vup);
+    function Vmove(ev){
+        ev=ev||event;
+        var L=ev.pageX-disX;
+        span.className="";
+        if(L<0){
+            L=0;
+            span.className="Vicon";
+        }else if(L>=progressBar2.offsetWidth-processBtn2.offsetWidth){
+            L=progressBar2.offsetWidth-processBtn2.offsetWidth;
+        }
+        processBtn2.style.left=L+"px";
+        Completed2.style.width=L+"px";       		audio.volume=(Completed2.offsetWidth/(progressBar2.offsetWidth-processBtn2.offsetWidth))*1;
+    }
+    
+    function Vup(){
+    	document.removeEventListener('mousemove',Vmove);
+		document.removeEventListener('mouseup',Vup);
+    }
+    
+    
+    
+    ev.preventDefault();
+};
+
+
+//列表里面的点击事件
+function playa(id){
+	
+    m=id;
+    audio.src=mscsrc[m];
+    console.log(m)
+    clear();
+    lis[m].className="hover";
+    run();
+}
+function preva(){
+    m--;
+    if(m<0){
+        m=mscsrc.length-1;
+    };
+    audio.src=mscsrc[m];
+    clear();
+    lis[m].className="hover";
+    run();
+};
+function nexta(){
+    m++;
+    if(m>mscsrc.length-1){
+        m=0;
+    };
+    clear();
+    audio.src=mscsrc[m];
+    lis[m].className="hover";
+    run();
+}
+function clear(){
+    for(var i=0; i<lis.length; i++){
+        lis[i].className="";
+    }
+}
+console.log(m)
+window.onload=function Play(){
+    for(var i=0; i<msc.length;i++){
+    inner+=`<li>
+                <a href="#" id="${i}" onclick="playa(this.id)" style="cursor:pointer;">${msc[i]}</a>
+            </li>`
+    }
+    mConten.innerHTML=inner;
+    audio.src=mscsrc[m];
+    lis[m].className="hover";
+
+
+    var mCanvas=document.getElementById("mCanvas");
+    var ctx=mCanvas.getContext('2d');
+    var actx=new window.AudioContext; //段音频到达扬声器进行播放之前，半路对其进行拦截
+    var color=ctx.createLinearGradient(mCanvas.width*.5,0,mCanvas.width*.5,250);
+     //创建线性的渐变对象(开始X,开始Y,结束X,结束Y);
+    color.addColorStop(0,"#0f0");  //三个颜色做渐变
+    color.addColorStop(.5,"#f00");
+    color.addColorStop(1,"#f0f");
+    colort=ctx.createLinearGradient(mCanvas.width*.5,250,mCanvas.width*.5,500);
+    colort.addColorStop(0,"rgba(125,225,133,0.7)");
+    colort.addColorStop(.5,"rgba(225,225,0,0.1)");
+    colort.addColorStop(1,"rgba(125,0,133,0)");
+    var analyser=actx.createAnalyser();  //获取频谱能量值的analyser节点
+    var audioSrc=actx.createMediaElementSource(audio);
+    audioSrc.connect(analyser);  //音频输入到扬声器
+    analyser.connect(actx.destination);
+    var draw=function(){
+        var array=new Uint8Array(analyser.frequencyBinCount);//从analyser中得到此刻的音频中各频率的能量值。
+        analyser.getByteFrequencyData(array); //此刻array中存储了从低频0Hz到高频~Hz的所有数据。频率做为X轴，能量值做为Y轴.
+        var num=700/(10+2);     
+        //屏幕上可以画多少根
+        var step=Math.round(array.length/num);  //计算从analyser中的采样步长
+        ctx.clearRect(0,0,mCanvas.width,mCanvas.height);  //清除画布；
+        ctx.beginPath();  //开始
+        for(var i=1;i<num;i++){
+            var value=array[step*i];
+            ctx.fillStyle=color;
+            ctx.fillRect(i*10+mCanvas.width*.5,250,7,-value+1);
+            ctx.fillRect(mCanvas.width*.5-(i-1)*10,250,7,-value+1);
+            ctx.fill();
+            ctx.fillStyle=colort;
+            ctx.fillRect(i*10+mCanvas.width*.5,250,7,value+1);
+            ctx.fillRect(mCanvas.width*.5-(i-1)*10,250,7,value+1);
+
+        }
+        requestAnimationFrame(draw)
+    }
+    requestAnimationFrame(draw);
+
+};
+
+
+function run(){
+    if(audio.paused){ //检查音频是否已暂停：
+        audio.play(),  //播放音频
+        playStart.className='active';
+    }else{
+        audio.pause(),  //暂停音频
+        playStart.className='';
+    }
+}
+
+</script>
+</html>

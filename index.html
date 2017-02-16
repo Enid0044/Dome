@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <style>
+    html,body {
+        width:100%;
+        height:100%;
+        overflow:hidden;
+    }
+    ul{
+        list-style:none;
+    }
+    *{
+        padding:0;
+        margin:0;
+    }
+    body{
+        background:url(img/bg10.jpg) no-repeat ;
+        background-size:cover;
+
+    }
+    canvas {
+        display: block;
+    }
+    #icon{
+        width:100%;
+        height:100%;
+        position: absolute;
+        top:0;
+        left:0;
+        z-index: 1;
+    }
+    #icon div{
+        float:left;
+        position: absolute;
+        left:10px;
+        width:120px;
+        height:130px;
+        border:1px solid transparent;
+    }
+    #icon div:nth-of-type(1){
+        top:10px;
+    }
+    #icon div:nth-of-type(2){
+        top:150px;
+    }
+    #icon div:nth-of-type(3){
+        top:300px;
+    }
+    #icon div:nth-of-type(4){
+        top:450px;
+    }
+    #icon .hover{
+        border:1px solid #fcba7d;
+        background:rgba(254,210,169,.3);
+    }
+    #icon div p{
+        width:120px;
+        color:#fff;
+        text-align: center;
+    }
+    #icon div img{
+        width:100px;
+        height:100px;
+        margin:5px 10px 0;
+        vertical-align:top;
+    }
+    #iframeMusic,#iframePhoto{
+        width:100%;
+        height:100%;
+        position:absolute;
+        margin:auto;
+        overflow:hidden;
+        z-index: 3;
+    }
+    #iframeMusic{
+        top:0;
+        left:100%;
+        bottom:0;
+        right:0;
+    }
+    #iframePhoto{
+        top:200%;
+        left:0;
+        bottom:0;
+        right:0;
+    }
+    .close{
+        width:50px;
+        height:30px;
+        background:rgba(42,29,82,.8);
+        border:1px solid #221843;
+        color:#fff;
+        font:18px/30px "宋体";
+        text-decoration: none;
+        text-align: center;
+        position:absolute;
+        bottom:10%;
+        left:5%;
+        z-index: 3;
+        border-radius: 5px;
+
+
+    }
+    #iframeMusic iframe,#iframePhoto iframe{
+        width:100%;
+        height:100%;
+        position:absolute;
+        top:0;
+        left:0;
+        bottom:0;
+        right:0;
+    }
+    </style>
+    <body>
+        <!-- 背景 -->
+        <canvas id="canvas"></canvas>
+        <!-- 图标 -->
+        <section id="icon">
+            <div id="trash"  class="icon">
+                <a href="#"><img src="icon/trash.png"></a>
+                <p>回收站</p>
+            </div>
+            <div id="music" class="icon">
+                <a href="#"><img src="icon/qq.png"></a>
+                <p>音乐</p>
+            </div>
+            <div id="photo" class="icon">
+                <a href="#"><img src="icon/photo.png"></a>
+                <p>多图</p>
+            </div>
+            <div id="cloud" class="icon">
+                <a href="#"><img src="icon/cloud.png"></a>
+                <p>云</p>
+            </div>
+        </section>
+        <div id="iframeMusic" >
+            <a href="javascript:;" class="close">关闭</a>
+            <iframe src="music.html" scrolling="no" frameborder="0"></iframe>
+        </div>
+        <div id="iframePhoto" >
+            <a href="javascript:;" class="close">关闭</a>
+            <iframe src="photo.html" scrolling="no" frameborder="0"></iframe>
+        </div>
+    </body>
+
+</html>
+<script src="js/bg.js" ></script>
+<script src="js/MT.js"></script>
+<script src="js/jquery-3.1.1.min.js"></script>
+<script>
+    function Drag(id){
+        var _this=this;
+        this.box =document.getElementById(id);
+
+        this.disX=0;
+        this.disY=0;
+        this.inint();
+
+
+    };
+    Drag.prototype.inint=function(){
+        var _this=this;
+        this.box.addEventListener("mousedown", fnDown);
+        function fnDown(ev){
+
+            _this.fnDown(ev);
+        };
+        this.box.addEventListener("mouseover",fnOver);
+        function fnOver(){
+            _this.over()
+        };
+        this.box.addEventListener("dblclick",fnClick);
+        function fnClick(){
+            switch(_this.box.id){
+                case "music":
+                _this.Music();
+                break;
+                case "photo":
+                _this.Photo();
+                break;
+                case "cloud":
+                _this.Cloud();
+                break;
+            }
+
+        }
+    };
+    Drag.prototype.over=function(ev){
+        var _this=this;
+        this.box.className="hover";
+        this.box.addEventListener("mouseout",fnOut);
+        function fnOut(){
+            _this.out()
+        }
+
+    }
+    Drag.prototype.out=function(ev){
+        this.box.className="";
+    };
+    Drag.prototype.fnDown=function(ev){
+        var _this=this;
+        this.disX=ev.pageX-this.box.offsetLeft;
+        this.disY=ev.pageY-this.box.offsetTop;
+        this.box.style.zIndex=999;
+        document.addEventListener("mousemove", fnMove);
+        function fnMove(ev){
+            _this.fnMove(ev);
+        }
+        document.addEventListener("mouseup", fnUp);
+        function fnUp(){
+            _this.fnUp(fnMove,fnUp);
+
+        }
+        ev.preventDefault();
+    }
+
+    Drag.prototype.fnMove=function(ev){
+        var _this=this;
+        var L=ev.pageX-this.disX;
+        var T=ev.pageY-this.disY;
+        if(L<0){
+            L=0;
+        }else if(L>document.documentElement.clientWidth-this.box.clientWidth){
+            L=document.documentElement.clientWidth-this.box.clientWidth;
+        };
+        if(T<0){
+            T=0;
+        }else if(T>document.documentElement.clientHeight-this.box.clientHeight){
+            T=document.documentElement.clientHeight-this.box.clientHeight;
+        }
+        this.box.style.left=L+"px";
+        this.box.style.top=T+"px";
+        $(".icon").each(function(i,e){
+
+           if(_this.Duang(_this.box,e)){
+            console.log(e)
+                if(_this.box != e){
+
+                }
+            }
+        })
+
+
+
+
+    }
+    Drag.prototype.fnUp=function(fnMove,fnUp){
+        document.removeEventListener("mousemove", fnMove);
+        document.removeEventListener("mouseup", fnUp);
+
+    };
+
+    Drag.prototype.Music=function(){
+        $("#iframeMusic").animate({left:"0"})
+        $(".close").eq(0).click(function(){
+           $("#iframeMusic").animate({left:"100%"})
+        })
+
+
+
+    };
+    Drag.prototype.Cloud=function(){
+        console.log("Cloud")
+    };
+    Drag.prototype.Photo=function(){
+        console.log("Photo")
+        $("#iframePhoto").animate({top:"0"})
+        $(".close").eq(1).click(function(){
+           $("#iframePhoto").animate({top:"200%"})
+        })
+    };
+
+    Drag.prototype.Duang=function(obj,obj2){
+        var l1 = obj.offsetLeft,
+        t1 = obj.offsetTop,
+        r1 = l1 + obj.offsetWidth,
+        b1 = t1 + obj.offsetHeight;
+
+        var l2 = obj2.offsetLeft,
+        t2 = obj2.offsetTop,
+        r2 = l2 + obj2.offsetWidth,
+        b2 = t2 + obj2.offsetHeight;
+
+        if(r1 < l2 || b1 < t2 || l1 > r2 || t1 > b2){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    var t1=new Drag("trash");
+    var t2=new Drag("music");
+    var t3=new Drag("photo");
+    var t4=new Drag("cloud");
+
+
+
+
+</script>

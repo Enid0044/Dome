@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            -webkit-user-select: none;
+            -moz-user-select:none;
+        }
+
+        body,html{
+            width:100%;
+            height:100%;
+        }
+        body{
+            background:url("img/bg1.jpg") no-repeat center center;
+            background-size:cover;
+            overflow:hidden;
+
+        }
+        #wrap{
+            width:100%;
+            height:100%;
+            position:relative;
+        }
+        #wrap .photo{
+            width:100%;
+            height:100%;
+            position: absolute;
+            top:0;
+            left:0;
+            z-index: 1;
+        }
+        .photo_i, .photo_3d, .photo_front, .photo_back{
+            width:360px;
+            height:380px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .photo .photo_i{
+            transition: 800ms;
+            perspective: 750px;
+            left: -100px;
+            top: -100px;
+            transform: translate(-50%,-50%) scale(.5) rotate(0);
+        }
+        .photo .photo_3d{
+            transition: 500ms;
+            transform-style: preserve-3d;
+            transform-origin: 0 50%;
+        }
+        .photo_front,.photo_back{
+            border-radius: 10px;
+            background: #fff;
+            padding: 20px 15px;
+            box-sizing: border-box;
+            backface-visibility: hidden;
+        }
+        .photo .photo_front{
+            transform: rotateY(0);
+        }
+        .photo .photo_front p{
+            width:100%;
+            height:305px;
+            border: 2px solid #0c1540;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .photo_front p img{
+            width:100%;
+            align-self: center;
+        }
+        .photo_front  h3{
+            width: 330px;
+            height: 40px;
+            background: rgba(0,11,57,.9);
+            border-radius: 0 0 6px 6px;
+            margin: 0 auto;
+            text-align: center;
+            font: 16px/40px Arial;
+            color: #fff;
+        }
+        .photo .photo_back{
+            transform: rotateY(-180deg);
+        }
+        .photo .photo_back p{
+            font-size: 14px;
+            line-height: 20px;
+            color: #d8536d;
+        }
+        #wrap .photo .center {
+            z-index: 9999;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%) scale(1) rotate(0);
+        }
+        .photo .front .photo_3d{
+            transform: translateX(0) rotateY(0);
+        }
+        .photo .back .photo_3d{
+            transform: translateX(100%) rotateY(-180deg);
+        }
+        .nav {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 777;
+            width: 100%;
+            height: 200px;
+            padding-top: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            background: -webkit-linear-gradient(top,rgba(0,0,0,.5),transparent);
+            display:none;
+        }
+        .nav .nav_i {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.5);
+            cursor: pointer;
+            transform: scale(.5);
+            transition: 500ms;
+        }
+        .nav .active {
+            background:#284a66;
+            transform: scale(.8) rotateY(0);
+        }
+
+        .nav .back {
+            transform: scale(.7) rotateY(-180deg);
+        }
+        #wrap .shade {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index:9999;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,11,57,.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #wrap .hide {
+            transition: 1s;
+            opacity: 0;
+            transform: scale(0) rotateY(360deg);
+        }
+        #wrap .shade .start {
+            width: 200px;
+            height: 60px;
+            border: 2px solid #040613;
+            border-radius: 10px;
+            background: rgba(248,229,227,.5);
+            text-align: center;
+            font: 22px/60px Arial;
+            cursor: pointer;
+        }
+
+        </style>
+    <body>
+    <div id="wrap">
+            <div class="photo">
+                <div class="photo_i front" id="photo_{{id}}">
+                    <div class="photo_3d">
+                        <div class="photo_front" >
+                            <p class="img">
+                                <img src={{img}}>
+                            </p>
+                           <h3>{{caption}}</h3>
+                        </div>
+                        <div class="photo_back">
+                            <p>{{desc}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="nav">
+                <a herf="javascript:;"class="nav_i" id="nav_{{id}}"></a>
+            </nav>
+            <div class="shade">
+                <div class="start">Start View</div>
+            </div>
+        </div>
+
+    </body>
+<script src="js/data.js"></script>
+<script>
+(function (){
+//获取元素
+    function getName(ele){
+        var first=ele.substr(0,1);
+        var isArr=ele.split(" ");
+        if(first=="#" && isArr.length==1){
+            return document.getElementById(ele.substr(1));
+        }else{
+            var arr=Array.from(document.querySelectorAll(ele));
+            return  arr.length==1? arr[0]: arr;
+        }
+    };
+//判断元素是否有class
+    function hasClass(obj,cla){
+        var re = new RegExp(`\\b${cla}\\b`);//`\\b${cla}\\b`
+        if(re.test(obj.className)){
+            return true;
+        }else{
+            return false;
+        }
+    };
+//元素添加class
+    function addClass(obj,cla){
+        if(!hasClass(obj,cla)){
+            obj.className += ` ${cla}`;
+        }else{
+            obj.className = obj.className.trim()
+        }
+    };
+//删除class
+    function rmClass(obj,cla){
+        var re = new RegExp(`\\b${cla}\\b`);
+        if(hasClass(obj,cla)){
+            obj.className=obj.className.replace(re,"");
+        }
+    };
+    var n=0;
+//遮罩层
+getDate(dataList);
+getName('.shade .start').addEventListener('click',function() {
+        addClass(getName('.shade'),'hide');
+        getName(".nav").style.display="block"
+        setTimeout(function(){
+            sortImg(n)
+        }, 200);
+});
+//导航点击的时候
+getName(".nav_i").forEach((item,i)=>{
+    item.onclick=function(){
+        turnImg(getName(`#photo_${i}`))
+    }
+});
+
+
+
+//数据生成结构
+
+    function getDate(data){
+        var photo_html=getName(".photo").innerHTML;
+        var nav_html=getName(".nav").innerHTML;
+        var photos = [],nav = [];
+        data.forEach((item,i)=>{
+            var photoTemp = photo_html.replace(/{{id}}/,i)
+                    .replace(/{{img}}/,item.img)
+                    .replace(/{{caption}}/,item.caption)
+                    .replace(/{{desc}}/,item.desc);
+            var navTemp = nav_html.replace(/{{id}}/,i);
+            photos.push(photoTemp);
+            nav.push(navTemp);
+            getName(".photo").innerHTML=photos.join("");
+            getName(".nav").innerHTML=nav.join("");
+        });
+    };
+// 指定范围随机数
+    function rn(arr){
+        var max=Math.max.apply(null,arr);
+        var min=Math.min.apply(null,arr);
+        var n=Math.round(Math.random()*(max-min)+min);
+        return n;
+    };
+//指定随机的范围
+    var len=dataList.length;
+    function scope(){
+        var wrap=getName("#wrap");
+        var photo=getName(`#photo_${rn([0,len-1])}`);
+        var W=wrap.clientWidth,
+            H=wrap.clientHeight,
+            w=photo.offsetWidth,
+            h=photo.offsetHeight;
+        var data={
+             L:{
+                x:[-w/3,W/2 - w/2 - w],
+                y:[-h/3,H - h*2/3]
+            },
+            R:{
+                x:[W/2 + w/2,W - w*2/3],
+                y:[-h/3,H - h*2/3]
+
+            }
+        };
+        return data;
+    };
+//给所有的图片排序
+    function sortImg(n){
+        var photo=getName(".photo_i");
+        initPhotos(photo)
+        var center=photo.splice(n,1)[0];
+        addClass(center,"center");
+        addClass(getName(`#nav_${n}`),"active");
+        photo.sort(()=>{
+            return Math.random()-0.5;
+        });
+
+        center.onclick=function(){
+            turnImg(this);
+        }
+        var ra=scope();  //随机范围
+        var left=photo.splice(0,Math.ceil((len-1)/2));
+        var right=photo;
+        left.forEach((item,i)=>{
+            item.style.zIndex=rn([0,len]);
+            item.style.left=rn(ra.L.x)+"px";
+            item.style.top=rn(ra.L.y)+"px";
+            item.style.transform = `translate(0,0) scale(.9) rotate(${rn([-2160,2160])}deg)`;
+        });
+        right.forEach((item,i)=>{
+            item.style.zIndex=rn([0,len]);
+            item.style.left=rn(ra.R.x)+"px";
+            item.style.top=rn(ra.R.y)+"px";
+            item.style.transform = `translate(0,0) scale(.9) rotate(${rn([-2160,2160])}deg)`;
+        });
+    }
+    //控制图片翻转
+    function turnImg(ele){
+        var m=ele.id.split("_")[1];
+        var nav=getName(`#nav_${m}`);
+        if(!hasClass(ele,"center")){
+            return sortImg(m)
+        };
+        if(hasClass(ele,"front")){
+            addClass(ele,"back");
+            rmClass(ele,"front");
+            addClass(nav,'back');
+        }else{
+            addClass(ele,"front");
+            rmClass(ele,"back");
+            rmClass(nav,'back')
+        }
+
+    };
+
+    //清除一下默认样式
+    function initPhotos(objs) {
+        objs.forEach((item,i)=>{
+            if(hasClass(item,'center')){
+                var nav = getName(`#nav_${i}`);
+                rmClass(item,'center');
+                rmClass(item,'back');
+                addClass(item,'front');
+                rmClass(nav,'active');
+                rmClass(nav,'back');
+                item.onclick = null;
+            }
+            item.style.left = '';
+            item.style.top = '';
+            item.style.zIndex = '';
+            item.style.transform = `translate(-50%,-50%) scale(1.1) rotate(0deg)`;
+        });
+    }
+
+})()
+</script>
+</html>
